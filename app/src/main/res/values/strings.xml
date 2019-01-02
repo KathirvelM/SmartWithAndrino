@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Automation</string>
+
+    <array name="titles">
+        <item>Bed</item>
+        <item>Fan</item>
+        <item>Kitchen</item>
+        <item>Light</item>
+    </array>
+</resources>

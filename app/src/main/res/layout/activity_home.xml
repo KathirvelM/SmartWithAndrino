@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/colorPrimaryDark"
+    tools:context="com.angler.automation.HomeActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+
+    </android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="16dp">
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/ImageSwitch1"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/ic_bed"
+                android:padding="15dp"
+                android:tint="@color/white"
+                android:background="@drawable/bg_highligted" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/ImageSwitch2"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:padding="15dp"
+                android:src="@drawable/ic_fan"
+                android:tint="@color/white"
+                android:background="@drawable/bg_non_highlighted" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/ImageSwitch3"
+                android:layout_width="60dp"
+                android:padding="15dp"
+                android:layout_height="60dp"
+                android:tint="@color/white"
+                android:src="@drawable/ic_kitchen"
+                android:background="@drawable/bg_non_highlighted" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/ImageSwitch4"
+                android:padding="15dp"
+                android:layout_width="60dp"
+                android:tint="@color/white"
+                android:layout_height="60dp"
+                android:src="@drawable/ic_light"
+                android:background="@drawable/bg_highligted" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <com.gigamole.navigationtabstrip.NavigationTabStrip
+        android:id="@+id/navigationTabStrip"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:nts_color="#3399ff"
+        app:nts_size="15sp"
+        app:nts_weight="3dp"
+        app:nts_factor="2.5"
+        app:nts_titles="@array/titles"
+        app:nts_type="line"
+        app:nts_gravity="bottom"
+        app:nts_corners_radius="1.5dp"
+        app:nts_animation_duration="300"
+        app:nts_active_color="#3399ff"
+        app:nts_inactive_color="@color/grey"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>
