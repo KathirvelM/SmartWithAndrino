@@ -7,4 +7,6 @@
         <item>Kitchen</item>
         <item>Light</item>
     </array>
+
+    <string name="icon"><u>ICON</u></string>
 </resources>

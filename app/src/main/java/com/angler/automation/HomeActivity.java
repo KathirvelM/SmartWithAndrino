@@ -2,6 +2,8 @@ package com.angler.automation;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -11,17 +13,27 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.angler.automation.fragments.ActionFragment;
 import com.appizona.yehiahd.fastsave.FastSave;
 import com.gigamole.navigationtabstrip.NavigationTabStrip;
 
+import java.util.ArrayList;
+import java.util.Set;
+
 import me.aflak.bluetooth.Bluetooth;
-import me.aflak.bluetooth.DiscoveryCallback;
+import me.aflak.bluetooth.DeviceCallback;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
+
+    public static String TAG = HomeActivity.class.getSimpleName();
 
     private ViewPager mViewPager;
     private NavigationTabStrip mTopNavigationTabStrip;
@@ -29,7 +41,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     public static SupplyClass supplyClass = null;
     Bluetooth bluetooth = new Bluetooth(this);
 
-    ImageView switch1, switch2, switch3, switch4;
+    ImageView switch1, switch2, switch3, switch4, bluetoothActionBtn;
+    LinearLayout inActiveLLay, activeLLay, emptyLay;
+    Button clickToPairBtn;
+
+    private ListView lstvw;
+    private ArrayAdapter aAdapter;
+    private BluetoothAdapter bAdapter = BluetoothAdapter.getDefaultAdapter();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,161 +59,120 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         initViewPager();
         updateValues();
         listeners();
+        showDeviceList();
 
-        BluetoothAdapter mBtAdapter = BluetoothAdapter.getDefaultAdapter();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                blutooth1();
+            }
+        }, 2000);
+    }
 
-        if (mBtAdapter != null) {
-            if (!mBtAdapter.isEnabled()) {
-                mBtAdapter.enable();
+    private void showDeviceList() {
+        if (bAdapter == null) {
+            Toast.makeText(getApplicationContext(), "Bluetooth Not Supported", Toast.LENGTH_SHORT).show();
+        } else {
+            Set<BluetoothDevice> pairedDevices = bAdapter.getBondedDevices();
+            final ArrayList<String> list = new ArrayList();
+            if (pairedDevices.size() > 0) {
+                for (BluetoothDevice device : pairedDevices) {
+                    String devicename = device.getName();
+                    String macAddress = device.getAddress();
+                    list.add(devicename);
+                }
+                lstvw = (ListView) findViewById(R.id.deviceList);
+                aAdapter = new ArrayAdapter(getApplicationContext(), R.layout.list_item_device, list);
+                lstvw.setAdapter(aAdapter);
+                emptyLay.setVisibility(View.GONE);
+                inActiveLLay.setVisibility(View.VISIBLE);
+                lstvw.setVisibility(View.VISIBLE);
+
+                lstvw.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        connectToDevice(list.get(i));
+                    }
+                });
+            } else {
+                emptyLay.setVisibility(View.VISIBLE);
+                inActiveLLay.setVisibility(View.VISIBLE);
+                lstvw.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    public void connectToDevice(String o) {
+        if (bluetooth != null) {
+            bluetooth.connectToName(o);
+        }
+    }
+
+    private void blutooth1() {
+        bluetooth.setDeviceCallback(new DeviceCallback() {
+            @Override
+            public void onDeviceConnected(BluetoothDevice device) {
+                Log.d(TAG, "onDeviceConnected: ");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        activeLLay.setVisibility(View.VISIBLE);
+                        inActiveLLay.setVisibility(View.GONE);
+                        bluetoothActionBtn.setVisibility(View.VISIBLE);
+                    }
+                });
+            }
+
+            @Override
+            public void onDeviceDisconnected(BluetoothDevice device, String message) {
+                Log.d(TAG, "onDeviceDisconnected: " + message);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        activeLLay.setVisibility(View.GONE);
+                        bluetoothActionBtn.setVisibility(View.GONE);
+                        inActiveLLay.setVisibility(View.VISIBLE);
+                    }
+                });
+            }
+
+            @Override
+            public void onMessage(String message) {
+                Log.d(TAG, "onMessage: " + message);
+            }
+
+            @Override
+            public void onError(String message) {
+                Log.d(TAG, "onError: " + message);
+            }
+
+            @Override
+            public void onConnectError(BluetoothDevice device, String message) {
+                Log.d(TAG, "onConnectError: " + message);
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (bAdapter != null) {
+            if (!bAdapter.isEnabled()) {
+                bAdapter.enable();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        // blutooth();
+                        activeLLay.setVisibility(View.GONE);
+                        inActiveLLay.setVisibility(View.VISIBLE);
                     }
                 }, 3000);
             } else {
-                blutooth1();
-                //blutooth();
+
             }
         } else {
             Toast.makeText(this, "Device bluetooth option not works", Toast.LENGTH_SHORT).show();
         }
-
-        /*
-        * BluetoothConfiguration config = new BluetoothConfiguration();
-config.context = getApplicationContext();
-config.bluetoothServiceClass = BluetoothLeService.class; // BluetoothClassicService.class or BluetoothLeService.class
-config.bufferSize = 1024;
-config.characterDelimiter = '\n';
-config.deviceName = "Your App Name";
-config.callListenersInMainThread = true;
-
-// Bluetooth Classic
-config.uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb"); // Required
-
-// Bluetooth LE
-config.uuidService = UUID.fromString("e7810a71-73ae-499d-8c15-faa9aef0c3f2"); // Required
-config.uuidCharacteristic = UUID.fromString("bef8d6c9-9c21-4c9e-b632-bd58c1009f9f"); // Required
-config.transport = BluetoothDevice.TRANSPORT_LE; // Required for dual-mode devices
-config.uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb"); // Used to filter found devices. Set null to find all devices.
-
-BluetoothService.init(config);
-
-BluetoothService service = BluetoothService.getDefaultInstance();
-
-service.setOnScanCallback(new BluetoothService.OnBluetoothScanCallback() {
-    @Override
-    public void onDeviceDiscovered(BluetoothDevice device, int rssi) {
     }
-
-    @Override
-    public void onStartScan() {
-    }
-
-    @Override
-    public void onStopScan() {
-    }
-});
-
-service.startScan(); // See also service.stopScan();
-
-service.setOnEventCallback(new BluetoothService.OnBluetoothEventCallback() {
-    @Override
-    public void onDataRead(byte[] buffer, int length) {
-    }
-
-    @Override
-    public void onStatusChange(BluetoothStatus status) {
-    }
-
-    @Override
-    public void onDeviceName(String deviceName) {
-    }
-
-    @Override
-    public void onToast(String message) {
-    }
-
-    @Override
-    public void onDataWrite(byte[] buffer) {
-    }
-});
-
-service.connect(device); // See also service.disconnect();
-
-BluetoothWriter writer = new BluetoothWriter(service);
-
-writer.writeln("Your text here");*/
-    }
-
-    private void blutooth1() {
-
-
-
-    }
-
-    /*private void blutooth() {
-        BluetoothConfiguration config = new BluetoothConfiguration();
-        config.context = getApplicationContext();
-        config.bluetoothServiceClass = BluetoothClassicService.class; // BluetoothClassicService.class or BluetoothLeService.class
-        config.bufferSize = 1024;
-        config.characterDelimiter = '\n';
-        //config.deviceName = "Home Automation";
-        config.callListenersInMainThread = true;
-
-        // Bluetooth Classic
-        config.uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); // Required
-
-        BluetoothService.init(config);
-
-        BluetoothService service = BluetoothService.getDefaultInstance();
-
-        service.setOnScanCallback(new BluetoothService.OnBluetoothScanCallback() {
-            @Override
-            public void onDeviceDiscovered(BluetoothDevice device, int rssi) {
-                Log.d(HomeActivity.class.getSimpleName(), "onDeviceDiscovered: ");
-            }
-
-            @Override
-            public void onStartScan() {
-                Log.d(HomeActivity.class.getSimpleName(), "onStartScan: ");
-            }
-
-            @Override
-            public void onStopScan() {
-                Log.d(HomeActivity.class.getSimpleName(), "onStopScan: ");
-            }
-        });
-
-        service.startScan(); // See also service.stopScan();
-
-        *//*service.setOnEventCallback(new BluetoothService.OnBluetoothEventCallback() {
-            @Override
-            public void onDataRead(byte[] buffer, int length) {
-
-            }
-
-            @Override
-            public void onStatusChange(BluetoothStatus status) {
-
-            }
-
-            @Override
-            public void onDeviceName(String deviceName) {
-
-            }
-
-            @Override
-            public void onToast(String message) {
-
-            }
-
-            @Override
-            public void onDataWrite(byte[] buffer) {
-
-            }
-        });*//*
-    }*/
 
     @Override
     protected void onStart() {
@@ -215,6 +192,9 @@ writer.writeln("Your text here");*/
         switch2.setOnClickListener(this);
         switch3.setOnClickListener(this);
         switch4.setOnClickListener(this);
+
+        clickToPairBtn.setOnClickListener(this);
+        bluetoothActionBtn.setOnClickListener(this);
 
         ((MyApplication) getApplication()).setActionInterface(new ActionInterface() {
             @Override
@@ -281,6 +261,13 @@ writer.writeln("Your text here");*/
         switch2 = findViewById(R.id.ImageSwitch2);
         switch3 = findViewById(R.id.ImageSwitch3);
         switch4 = findViewById(R.id.ImageSwitch4);
+
+        bluetoothActionBtn = findViewById(R.id.bluetooth_action_btn);
+
+        inActiveLLay = findViewById(R.id.inactive_lay);
+        activeLLay = findViewById(R.id.active_lay);
+        emptyLay = findViewById(R.id.empty_lis_lay);
+        clickToPairBtn = findViewById(R.id.click_to_pair_btn);
     }
 
     @Override
@@ -300,6 +287,26 @@ writer.writeln("Your text here");*/
 
             case R.id.ImageSwitch4:
                 mViewPager.setCurrentItem(3);
+                break;
+
+            case R.id.click_to_pair_btn:
+                try {
+                    Intent intentOpenBluetoothSettings = new Intent();
+                    intentOpenBluetoothSettings.setAction(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS);
+                    startActivity(intentOpenBluetoothSettings);
+                } catch (ActivityNotFoundException e) {
+                    e.printStackTrace();
+                }
+                break;
+
+            case R.id.bluetooth_action_btn:
+                if(bluetooth!=null && bluetooth.isConnected()){
+                    bluetooth.disconnect();
+                }else{
+                    activeLLay.setVisibility(View.GONE);
+                    bluetoothActionBtn.setVisibility(View.GONE);
+                    inActiveLLay.setVisibility(View.VISIBLE);
+                }
                 break;
         }
     }

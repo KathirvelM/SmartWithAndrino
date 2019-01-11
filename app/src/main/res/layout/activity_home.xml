@@ -1,116 +1,206 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:background="@color/colorPrimaryDark"
+    android:orientation="vertical"
     tools:context="com.angler.automation.HomeActivity">
 
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone">
+        android:background="@color/colorPrimary"
+        android:visibility="visible">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="My Smart Home"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/bluetooth_action_btn"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:layout_marginRight="16dp"
+                android:src="@drawable/bluetooth_disabled_btn"
+                android:tint="@color/white"
+                android:visibility="invisible" />
+
+        </RelativeLayout>
 
     </android.support.v7.widget.Toolbar>
 
     <LinearLayout
+        android:id="@+id/active_lay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="16dp">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <LinearLayout
-            android:layout_weight="1"
-            android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="16dp">
 
-            <ImageView
-                android:id="@+id/ImageSwitch1"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:src="@drawable/ic_bed"
-                android:padding="15dp"
-                android:tint="@color/white"
-                android:background="@drawable/bg_highligted" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/ImageSwitch1"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/bg_highligted"
+                    android:padding="15dp"
+                    android:src="@drawable/ic_bed"
+                    android:tint="@color/white" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/ImageSwitch2"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/bg_non_highlighted"
+                    android:padding="15dp"
+                    android:src="@drawable/ic_fan"
+                    android:tint="@color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/ImageSwitch3"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/bg_non_highlighted"
+                    android:padding="15dp"
+                    android:src="@drawable/ic_kitchen"
+                    android:tint="@color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/ImageSwitch4"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/bg_highligted"
+                    android:padding="15dp"
+                    android:src="@drawable/ic_light"
+                    android:tint="@color/white" />
+            </LinearLayout>
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_weight="1"
-            android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+        <com.gigamole.navigationtabstrip.NavigationTabStrip
+            android:id="@+id/navigationTabStrip"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            app:nts_active_color="#3399ff"
+            app:nts_animation_duration="300"
+            app:nts_color="#3399ff"
+            app:nts_corners_radius="1.5dp"
+            app:nts_factor="2.5"
+            app:nts_gravity="bottom"
+            app:nts_inactive_color="@color/grey"
+            app:nts_size="15sp"
+            app:nts_titles="@array/titles"
+            app:nts_type="line"
+            app:nts_weight="3dp" />
 
-            <ImageView
-                android:id="@+id/ImageSwitch2"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:padding="15dp"
-                android:src="@drawable/ic_fan"
-                android:tint="@color/white"
-                android:background="@drawable/bg_non_highlighted" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_weight="1"
-            android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/ImageSwitch3"
-                android:layout_width="60dp"
-                android:padding="15dp"
-                android:layout_height="60dp"
-                android:tint="@color/white"
-                android:src="@drawable/ic_kitchen"
-                android:background="@drawable/bg_non_highlighted" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_weight="1"
-            android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/ImageSwitch4"
-                android:padding="15dp"
-                android:layout_width="60dp"
-                android:tint="@color/white"
-                android:layout_height="60dp"
-                android:src="@drawable/ic_light"
-                android:background="@drawable/bg_highligted" />
-        </LinearLayout>
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 
-    <com.gigamole.navigationtabstrip.NavigationTabStrip
-        android:id="@+id/navigationTabStrip"
+    <LinearLayout
+        android:id="@+id/inactive_lay"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        app:nts_color="#3399ff"
-        app:nts_size="15sp"
-        app:nts_weight="3dp"
-        app:nts_factor="2.5"
-        app:nts_titles="@array/titles"
-        app:nts_type="line"
-        app:nts_gravity="bottom"
-        app:nts_corners_radius="1.5dp"
-        app:nts_animation_duration="300"
-        app:nts_active_color="#3399ff"
-        app:nts_inactive_color="@color/grey"
-        android:layout_marginRight="16dp"
-        android:layout_marginLeft="16dp"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/vp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_non_highlighted"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="Paired Devices"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <ListView
+            android:id="@+id/deviceList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"
+            tools:listitem="@layout/list_item_device" />
+
+        <LinearLayout
+            android:id="@+id/empty_lis_lay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Paired Device list empty!!!"
+                android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/click_to_pair_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_switch_off"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="Click to Pair"
+                android:textAllCaps="false" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </LinearLayout>
